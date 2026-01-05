@@ -20,12 +20,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Basic content (without participants)
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
         `;
+
+        // Participants section (built with DOM to avoid HTML injection)
+        const participantsSection = document.createElement("div");
+        participantsSection.className = "participants-section";
+
+        const participantsTitle = document.createElement("div");
+        participantsTitle.className = "participants-title";
+        participantsTitle.textContent = "Participants:";
+        participantsSection.appendChild(participantsTitle);
+
+        if (!details.participants || details.participants.length === 0) {
+          const none = document.createElement("p");
+          none.className = "no-participants";
+          none.textContent = "No participants yet.";
+          participantsSection.appendChild(none);
+        } else {
+          const ul = document.createElement("ul");
+          ul.className = "participants-list";
+          details.participants.forEach((p) => {
+            const li = document.createElement("li");
+            li.className = "participant-item";
+            li.textContent = p;
+            ul.appendChild(li);
+          });
+          participantsSection.appendChild(ul);
+        }
+
+        activityCard.appendChild(participantsSection);
 
         activitiesList.appendChild(activityCard);
 
